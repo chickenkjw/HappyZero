@@ -1,10 +1,10 @@
-<img src="https://capsule-render.vercel.app/api?type=waving&color=ffa500&height=300&section=header&text=Localhost:%20Inha&fontSize=90" />
+<img src="https://capsule-render.vercel.app/api?type=waving&color=ffa500&height=300&section=header&text=Localhost:Inha&fontSize=90" />
 
 ## 0. Index
 1. [Tech Stack](#1-tech-stack)
 2. [Environment](#2-environment)
 3. [API](#3-api)
-4. [Backend](#4-backend)
+4. [Frontend](#4-backend)
 5. [Collaborators](#5-collaborators)
 
 </br>
@@ -16,16 +16,11 @@
 
 ## 2. Environment
 
-- *(IDE: IntelliJ IDEA Ultimate 2022.03)*
-- *(Framework: Spring Boot 3.1.1)*
-- Language: Java (JDK 17)
-- Build Tool: Gradle
+- *(IDE: Visual Studio 2022 & Rider 2023.1.2)*
+- *(Framework: .NET 7.0)*
+- Language: C#, HTML, CSS, JS
 - Using Library:
-  1. [Spring-Boot-Starter-Web](https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-web)
-  2. [Spring-Boot-Starter-Data-Jpa](https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-data-jpa)
-  3. [Spring-Boot-Devtools](https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-devtools)
-  4. [MySQL Connector/J](https://mvnrepository.com/artifact/com.mysql/mysql-connector-j)
-  5. [Lombok](https://mvnrepository.com/artifact/org.projectlombok/lombok)
+  
 
 </br>
 
