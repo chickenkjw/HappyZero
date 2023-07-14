@@ -31,15 +31,26 @@
 | Account | validate | POST | /api/account/validate | | AccountRequestDto | ResponseEntity.ok |
 | | signUp | POST | /api/account/signup | | AccountRequestDto | ResponseEntity.ok |
 | | signIn | POST | /api/account/signin | | AccountRequestDto | ResponseEntity.ok |
+| Post | save | POST | /api/post/save | | PostSaveRequestDto | ResponseEntity.ok |
+| | getPost | GET | /api/post/get | ?id={id} | | Json |
+| | getPosts | GET | /api/post/search | ?page={page}&size={size} | | Json |
 | for Debug | | | | | | |
-| Account | GET | testValidate | /api/test/account/validate | ?id={id} | | ResponseEntity.ok |
-| | GET | testSignUp | /api/test/account/signup | ?id={id}&pw={pw} | | ResponseEntity.ok |
-| | GET | testSignIn | /api/test/account/signin | ?id={id}&pw={pw} | | ResponseEntity.ok |
+| Account | testValidate | GET | /api/test/account/validate | ?id={id} | | ResponseEntity.ok |
+| | testSignUp | GET | /api/test/account/signup | ?id={id}&pw={pw} | | ResponseEntity.ok |
+| | testSignIn | GET | /api/test/account/signin | ?id={id}&pw={pw} | | ResponseEntity.ok |
+| Post | save | POST | /api/test/post/save | ?id={id}&title={title}&description={description} | | Json |
 
 | Dto | Data | Type |
 | --- | --- | --- |
 | AccountRequestDto | id | String |
+| | name | String |
 | | pw | String |
+| | email | String |
+| PostRequestDto | title | String |
+| | description | String |
+| PostSaveRequestDto | id | String |
+| | title | String |
+| | description | String |
 
 | Response | Value |
 | --- | --- |
