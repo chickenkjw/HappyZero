@@ -87,6 +87,7 @@ section {
 
     section .text-container {
         display: flex;
+        justify-content: space-between;
     }
 
         section .text-container .text-box {
