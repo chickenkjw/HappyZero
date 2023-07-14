@@ -1,0 +1,336 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <title>LocalHost: INHA</title>
+
+    <style>
+        *,
+        *::after,
+        *::before {
+            box-sizing: border-box;
+            padding: 0;
+            margin: 0;
+        }
+
+        .html {
+            font-size: 62.5%;
+        }
+
+        .navbar input[type="checkbox"],
+        .navbar .lines {
+            display: none;
+        }
+
+        .container {
+            max-width: 1200px;
+            width: 90%;
+            margin: auto;
+        }
+
+        .navbar {
+            box-shadow: 0px 5px 10px 0px #aaa;
+            position: fixed;
+            width: 100%;
+            background: #fff;
+            color: #000;
+            opacity: 0.85;
+            z-index: 100;
+        }
+
+        .navbar-container {
+            display: flex;
+            justify-content: space-between;
+            height: 64px;
+            align-items: center;
+        }
+
+        .menu-items {
+            order: 2;
+            display: flex;
+            align-items: center;
+        }
+
+        .logo {
+            order: 1;
+            font-size: 2.3rem;
+        }
+
+        .menu-items li {
+            list-style: none;
+            margin-left: 1.5rem;
+            font-size: 1.3rem;
+        }
+
+        .navbar a {
+            color: #444;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease-in-out;
+        }
+
+        .navbar a:hover {
+            color: #117964;
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                opacity: 0.95;
+            }
+
+            .navbar-container input[type="checkbox"],
+            .navbar-container .lines {
+                display: block;
+            }
+
+            .navbar-container {
+                display: block;
+                position: relative;
+                height: 64px;
+            }
+
+            .navbar-container input[type="checkbox"] {
+                position: absolute;
+                display: block;
+                height: 32px;
+                width: 30px;
+                top: 20px;
+                right: 20px;
+                z-index: 5;
+                opacity: 0;
+                cursor: pointer;
+            }
+
+            .navbar-container .lines {
+                display: block;
+                height: 28px;
+                width: 35px;
+                position: absolute;
+                top: 20px;
+                right: 20px;
+                z-index: 2;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+            }
+
+            .navbar-container .lines .line {
+                display: block;
+                height: 4px;
+                width: 100%;
+                border-radius: 10px;
+                background: #333;
+            }
+
+            .navbar-container .lines .line1 {
+                transform-origin: 0% 0%;
+                transition: transform 0.3s ease-in-out;
+            }
+
+            .navbar-container .lines .line2 {
+                transition: transform 0.2s ease-in-out;
+            }
+
+            .navbar-container .lines .line3 {
+                transform-origin: 0% 100%;
+                transition: transform 0.3s ease-in-out;
+            }
+
+            /*메뉴*/
+            .navbar .menu-items {
+                padding-top: 100px;
+                background: #fff;
+                height: 100vh;
+                max-width: 300px;
+                transform: translate(260%);
+                display: flex;
+                flex-direction: column;
+                margin-right: -40px;
+                padding-right: 40px;
+                transition: transform 0.6s ease-in-out;
+                box-shadow: 0px 5px 10px 0px #aaa;
+                position: fixed;
+                right: 0;
+            
+            }
+
+            .navbar .menu-items li {
+                margin-bottom: 1.8rem;
+                font-size: 1.1rem;
+                font-weight: 500;
+            }
+
+            .logo {
+                position: absolute;
+                top: 10px;
+                left: 15px;
+                font-size: 2.5rem;
+            }
+
+            .navbar-container input[type="checkbox"]:checked ~ .menu-items {
+                position: fixed;
+                right: 0;
+                transform: translateX(-40px);
+            }
+
+            .navbar-container input[type="checkbox"]:checked ~ .lines .line1 {
+                transform: rotate(45deg);
+            }
+
+            .navbar-container input[type="checkbox"]:checked ~ .lines .line2 {
+                transform: scaleY(0);
+            }
+
+            .navbar-container input[type="checkbox"]:checked ~ .lines .line3 {
+                transform: rotate(-45deg);
+            }
+        }
+
+        .menuicons {
+            list-style: none;
+            color: #ddd;
+            display: flex;
+        }
+
+        .menuicons li {
+            padding: 8px 12px;
+        }
+
+        .navtooglebutton {
+            display: block
+        }
+
+        .menuicons {
+            justify-content: center;
+            width: 100%;
+            display: none;
+        }
+
+        .navmenu.active,
+        .menuicons.active {
+            display: flex;
+        }
+
+        @media (max-width: 500px) {
+            .navbar-container input[type="checkbox"]:checked ~ .logo {
+                display: none;
+            }
+        }
+
+        /* 계정 버튼 스타일 */
+        .account {
+            position: relative;
+        }
+
+        .account-button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+        }
+
+        .account-button i {
+            margin-right: 5px;
+        }
+
+        .popup {
+            display: none;
+            position: absolute;
+            top: calc(100%);
+            right: 0;
+            background-color: #f9f9f9;
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            z-index: 1;
+        }
+        
+        .popup > ul > li {
+            margin: 0;
+        }
+
+        .account:hover .popup,
+        .popup:hover {
+            display: block;
+        }
+    </style>
+
+    <script>
+        // 로그인 버튼 요소 가져오기
+        var accountButton = document.getElementById('account-button');
+        var popup = document.getElementById('popup');
+        var popupTimer; // 팝업 딜레이를 위한 타이머 변수
+
+        // 마우스 오버 이벤트 리스너 추가
+        accountButton.addEventListener('mouseover', function() {
+            // 팝업 표시
+            popup.style.display = 'block';
+
+            // 일정 시간 후에 팝업 숨기기
+            popupTimer = setTimeout(function() {
+                popup.style.display = 'none';
+            }, 10000); // 1초 딜레이 (1000ms)
+        });
+
+        // 팝업창에 마우스 오버 이벤트 리스너 추가
+        popup.addEventListener('mouseover', function() {
+            // 팝업 표시 유지 (팝업 숨기기 타이머 취소)
+            clearTimeout(popupTimer);
+        });
+
+        // 팝업창에서 마우스 아웃 이벤트 리스너 추가
+        popup.addEventListener('mouseout', function() {
+            // 일정 시간 후에 팝업 숨기기
+            popupTimer = setTimeout(function() {
+                popup.style.display = 'none';
+            }, 10000); // 1초 딜레이 (1000ms)
+        });
+    </script>
+
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="navbar-container container">
+            <input type="checkbox" name="" id="">
+            <div class="lines">
+                <span class="line line1"></span>
+                <span class="line line2"></span>
+                <span class="line line3"></span>
+            </div>
+            <ul class="menu-items">
+                <li><a href="#">About&nbsp;Us</a></li>
+                <li><a href="#">Zero&nbsp;Waste&nbsp;Shop</a></li>
+                <li><a href="#">Certification</a></li>
+                <li><a href="#">Community</a></li>
+                <li><a href="#">Others</a></li>
+                
+                
+                
+                <li class="account">
+                  
+                  
+                  <button class="account-button" id="account-button">
+                        <i class="fas fa-user"></i> <!-- 아이콘 추가 -->
+                    </button>
+     
+                   <div class="popup">
+                        <ul>
+                            <li style="font-size: 14px"  ><a href="#">MyPage</a></li>
+                            <li style="font-size: 14px"><a href="#">Logout</a></li>
+                        </ul>
+                    </div>
+                </li>
+              
+                <div class="menuicons"></div>
+            </ul>
+            <h1 class="logo">Hz</h1>
+        </div>
+    </nav>
+</body>
+</html>
