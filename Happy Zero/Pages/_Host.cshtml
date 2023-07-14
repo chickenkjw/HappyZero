@@ -1,6 +1,7 @@
 ﻿@page "/"
 @using Microsoft.AspNetCore.Components.Web
 @namespace Happy_Zero.Pages
+@inject IConfiguration Config
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
 <!DOCTYPE html>
@@ -18,6 +19,7 @@
     @* custom add *@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <script src="~/js/home.js"></script>
+    <script src="~/js/getGeoLocation.js"></script>
 </head>
 <body>
     <component type="typeof(App)" render-mode="ServerPrerendered" />
@@ -36,6 +38,7 @@
     <script src="_framework/blazor.server.js"></script>
 
     @* custom add *@
-    
+    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=6233a051ba3d7fc1e246e89497a63662&libraries=services"></script>
+    <script src="~/js/kakaoMap.js"></script>
 </body>
 </html>

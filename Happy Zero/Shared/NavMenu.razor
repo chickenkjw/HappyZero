@@ -1,4 +1,6 @@
-﻿<input type="checkbox">
+﻿@inject AuthenticationStateProvider AuthStateProvider
+
+<input type="checkbox">
 <div class="lines">
     <span class="line line1"></span>
     <span class="line line2"></span>
@@ -6,13 +8,21 @@
 </div>
 <ul class="menu-items">
     <li><a href="/about-us">About Us</a></li>
-    <li><a href="#">Zero-Waste Shop</a></li>
+    <li><a href="/map">Zero-Waste Shop</a></li>
     <li><a href="#">Certification</a></li>
     <li><a href="#">Community</a></li>
     <li><a href="#">Others</a></li>
+
+    <AuthorizeView>
+        성공!!!!
+    </AuthorizeView>
 
     <li class="menuicons">
         <a href="/login"><i class="fa fa-user"></i></a>
     </li>
 </ul>
 <a href="/"><h1 class="logo">Hz</h1></a>
+
+@code {
+    
+}

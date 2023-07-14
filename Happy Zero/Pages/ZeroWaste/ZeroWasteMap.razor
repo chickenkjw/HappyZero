@@ -1,8 +1,29 @@
 ﻿@page "/map"
+@using System.Text.Json.Nodes;
+@inject IJSRuntime JSRuntime
 
 <PageTitle>제로 웨이스트 지도</PageTitle>
 
+<div class="d-flex container">
+    <div>
+        <div id="map" style="width: 550px; height: 600px;" class="shadow mt-5"></div>
+        <button @onclick="GetLocation" class="btn btn-primary mt-3 mb-4">위치 재검색</button>
+    </div>
+
+    
+</div>
+
 
 @code {
+    JsonArray? locArray;
+    List<double> latlng = new List<double>();
 
+    private async Task GetLocation() {
+        locArray = await JSRuntime.InvokeAsync<JsonArray>("getCoords");
+        foreach(var element in locArray) {
+            latlng.Add(element!.GetValue<double>());
+        }
+
+        await JSRuntime.InvokeVoidAsync("setMapMaker");
+    }
 }

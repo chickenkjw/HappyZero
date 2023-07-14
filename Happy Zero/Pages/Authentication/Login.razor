@@ -45,7 +45,7 @@
         //string json = JsonConvert.SerializeObject(user);
 
         /*errorMessage = JsonConvert.SerializeObject(new UserSession
-        {
+            {
             Name = "annyong",
             Role = "User",
             Email = "a@a.com",
@@ -54,12 +54,13 @@
 
         using(var httpClient = new HttpClient()) {
             //HttpContent content = new StringContent(json, Encoding.UTF8, "application/json");
-            var response = await httpClient.GetAsync($"http://localhostinha.kro.kr:8080/api//api/test/account/signin?id={user.Id}&pw={user.Password}");
+            var response = await httpClient.GetAsync($"http://localhostinha.kro.kr:8080/api/test/account/signin?id={user.Id}&pw={user.Password}");
             var ok = await response.Content.ReadAsStringAsync();
 
-            var loginResponse = await httpClient.GetAsync($"");
-            var responseContent = await response.Content.ReadAsStringAsync();
+            var loginResponse = await httpClient.GetAsync($"http://localhostinha.kro.kr:8080/api/test/account/getinfo?id={user.Id}");
+            var responseContent = await loginResponse.Content.ReadAsStringAsync();
             var token = JsonConvert.DeserializeObject<UserSession>(responseContent);
+
 
             if(response.IsSuccessStatusCode && ok.Equals("true") && token is not null) {
                 var auth = (AuthStateProvider)AuthStateProvider;
