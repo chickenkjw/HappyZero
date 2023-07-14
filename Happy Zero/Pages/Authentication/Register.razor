@@ -15,7 +15,7 @@
 		<label class="form-label" for="id">아이디</label>
 		<div class="d-flex">
 			<input class="form-control" type="text" @bind="user.Id" placeholder="아이디를 입력하세요" name="id" />
-			<button class="btn btn-secondary" id="id-check" @onclick="CheckUserIdDuplicated" @btnDisabled>중복체크</button>
+			<button class="btn btn-secondary" id="id-check" @onclick="CheckUserIdDuplicated">중복체크</button>
 		</div>
 		<p class="@idInfoMessage">@idDuplicatedMessage</p>
 	</div>
@@ -37,7 +37,7 @@
 
 	<p class="text-danger fs-5 mt-4">@errorMessage</p>
 
-	<button class="btn btn-primary mt-4 mx-auto d-flex" @onclick="SignUp">회원가입</button>
+	<button class="btn btn-primary mt-4 mx-auto d-flex" @onclick="SignUp" disabled="@btnCanPass">회원가입</button>
 </div>
 
 @code {
@@ -60,18 +60,19 @@
 	private string idDuplicatedMessage = string.Empty;
 
 	private string idInfoMessage => idCheckPass ? "text-info" : "text-danger";
-	private string? btnDisabled => idCheckPass ? "disabled" : null;
+	private bool btnCanPass => !idCheckPass && !string.IsNullOrEmpty(user.Password) && !string.IsNullOrEmpty(user.Email) && !string.IsNullOrEmpty(user.Name);
 
 	private async Task CheckUserIdDuplicated() {
-		string json = JsonConvert.SerializeObject(user);
+		//string json = JsonConvert.SerializeObject(user);
 
 		using (var httpClient = new HttpClient())
 		{
-			HttpContent content = new StringContent(json, Encoding.UTF8, "application/json");
-			var response = await httpClient.PostAsync("http://localhostinha.kro.kr:8080/api/account/validate", content);
+			//HttpContent content = new StringContent(json, Encoding.UTF8, "application/json");
+			var response = await httpClient.GetAsync($"http://localhostinha.kro.kr:8080/api/test/account/validate?id={user.Id}");
+			string isNotIdDuplicated = await response.Content.ReadAsStringAsync();
 
-			if (response.IsSuccessStatusCode)
-			{
+
+			if(response.IsSuccessStatusCode && isNotIdDuplicated.Equals("true")) {
 				idCheckPass = true;
 				idDuplicatedMessage = "사용 가능한 아이디입니다";
 			}
@@ -85,13 +86,14 @@
 	}
 
 	private async Task SignUp() {
-		string json = JsonConvert.SerializeObject(user);
+		//string json = JsonConvert.SerializeObject(user);
 
 		using(var httpClient = new HttpClient()) {
-			HttpContent content = new StringContent(json, Encoding.UTF8, "application/json");
-			var response = await httpClient.PostAsync("http://localhostinha.kro.kr:8080/api/account/signup", content);
+			//HttpContent content = new StringContent(json, Encoding.UTF8, "application/json");
+			var response = await httpClient.GetAsync($"http://localhostinha.kro.kr:8080/api/test/account/signup?id={user.Id}&name={user.Name}&pw={user.Password}&email={user.Email}");
+			string ok = await response.Content.ReadAsStringAsync();
 
-			if(response.IsSuccessStatusCode) {
+			if(response.IsSuccessStatusCode && ok.Equals("true")) {
 				NavigationManager.NavigateTo("/Login");
 				return;
 			}

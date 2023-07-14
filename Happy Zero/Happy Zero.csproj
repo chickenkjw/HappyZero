@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <Folder Include="Authentication\" />
+    <Folder Include="Pages\Receipt\" />
     <Folder Include="wwwroot\assets\images\" />
   </ItemGroup>
 
