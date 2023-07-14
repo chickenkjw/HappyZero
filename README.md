@@ -43,7 +43,9 @@
 | Dto | Data | Type |
 | --- | --- | --- |
 | AccountRequestDto | id | String |
+| | name | String |
 | | pw | String |
+| | email | String |
 | PostRequestDto | title | String |
 | | description | String |
 | PostSaveRequestDto | id | String |
