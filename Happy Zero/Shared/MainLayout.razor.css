@@ -20,6 +20,8 @@
     display: flex;
     justify-content: space-between;
     height: 64px;
+    position: sticky;
+    top: 0;
     align-items: center;
 }
 
@@ -36,7 +38,8 @@
 
     .navbar-container {
         display: block;
-        position: relative;
+        position: sticky;
+        top: 0;
         height: 64px;
     }
 }

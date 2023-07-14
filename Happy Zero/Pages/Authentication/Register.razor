@@ -1,5 +1,105 @@
 ﻿@page "/Register"
+@using System.ComponentModel.DataAnnotations
+@using Microsoft.AspNetCore.Mvc
+@using System.Text;
+@using Newtonsoft.Json
+@inject HttpClient HttpClient
+@inject NavigationManager NavigationManager
+
+<PageTitle>회원가입</PageTitle>
+
+<div id="auth-box">
+	<h4 class="text-center">회원가입</h4>
+
+	<div class="form-group mt-5">
+		<label class="form-label" for="id">아이디</label>
+		<div class="d-flex">
+			<input class="form-control" type="text" @bind="user.Id" placeholder="아이디를 입력하세요" name="id" />
+			<button class="btn btn-secondary" id="id-check" @onclick="CheckUserIdDuplicated" @btnDisabled>중복체크</button>
+		</div>
+		<p class="@idInfoMessage">@idDuplicatedMessage</p>
+	</div>
+
+	<div class="form-group mt-3">
+		<label class="form-label" for="password">비밀번호</label>
+		<input class="form-control" type="password" @bind="user.Password" placeholder="비밀번호를 입력하세요" name="password" />
+	</div>
+
+	<div class="form-group mt-3">
+		<label class="form-label" for="email">이메일</label>
+		<input class="form-control" type="email" @bind="user.Email" placeholder="이메일을 입력하세요" name="email" />
+	</div>
+
+	<div class="form-group mt-3">
+		<label class="form-label" for="name">닉네임</label>
+		<input class="form-control" type="text" @bind="user.Name" placeholder="이름을 입력하세요" name="name" />
+	</div>
+
+	<p class="text-danger fs-5 mt-4">@errorMessage</p>
+
+	<button class="btn btn-primary mt-4 mx-auto d-flex" @onclick="SignUp">회원가입</button>
+</div>
 
 @code {
+	private class RegisterUser {
+		[Required]
+		public string Id { get; set; }
+		[Required]
+		public string Password { get; set; }
+		[Required]
+		public string Name { get; set; }
+		[Required]
+		[EmailAddress]
+		public string Email { get; set; }
+	}
 
+	private RegisterUser user = new();
+	private bool idCheckPass = false;
+
+	private string errorMessage = string.Empty;
+	private string idDuplicatedMessage = string.Empty;
+
+	private string idInfoMessage => idCheckPass ? "text-info" : "text-danger";
+	private string? btnDisabled => idCheckPass ? "disabled" : null;
+
+	private async Task CheckUserIdDuplicated() {
+		string json = JsonConvert.SerializeObject(user);
+
+		using (var httpClient = new HttpClient())
+		{
+			HttpContent content = new StringContent(json, Encoding.UTF8, "application/json");
+			var response = await httpClient.PostAsync("http://localhostinha.kro.kr:8080/api/account/validate", content);
+
+			if (response.IsSuccessStatusCode)
+			{
+				idCheckPass = true;
+				idDuplicatedMessage = "사용 가능한 아이디입니다";
+			}
+			else
+			{
+				idDuplicatedMessage = "아이디를 사용할 수 없습니다";
+			}
+		}
+
+		return;
+	}
+
+	private async Task SignUp() {
+		string json = JsonConvert.SerializeObject(user);
+
+		using(var httpClient = new HttpClient()) {
+			HttpContent content = new StringContent(json, Encoding.UTF8, "application/json");
+			var response = await httpClient.PostAsync("http://localhostinha.kro.kr:8080/api/account/signup", content);
+
+			if(response.IsSuccessStatusCode) {
+				NavigationManager.NavigateTo("/Login");
+				return;
+			}
+			else {
+				errorMessage = "회원가입에 실패하였습니다. 잠시 후 다시 시도해 주십시오";
+			}
+		}
+
+		return;
+	}
 }

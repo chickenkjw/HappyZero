@@ -6,6 +6,7 @@
 .menu-items {
     order: 2;
     display: flex;
+    margin-bottom: 0;
 }
 
 .logo {
@@ -51,10 +52,10 @@
 
     .navbar-container input[type="checkbox"] {
         position: absolute;
+        top: 20px;
         display: block;
         height: 32px;
         width: 30px;
-        top: 20px;
         right: 20px;
         z-index: 5;
         opacity: 0;

@@ -1,0 +1,11 @@
+﻿#auth-box {
+    margin: 90px auto;
+    width: 40%;
+    min-width: 300px;
+    max-width: 900px;
+}
+
+#id-check {
+    min-width: 95px;
+    margin-left: 4px;
+}
