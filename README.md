@@ -1,4 +1,4 @@
-<img src="https://capsule-render.vercel.app/api?type=waving&color=ffa500&height=300&section=header&text=Localhost:Inha&fontSize=90" />
+<img src="https://capsule-render.vercel.app/api?type=waving&color=40E0D0&height=300&section=header&text=Localhost:Inha&fontSize=90" />
 
 ## 0. Index
 1. [Tech Stack](#1-tech-stack)
@@ -16,7 +16,7 @@
 
 ## 2. Environment
 
-- *(IDE: Visual Studio 2022 & Rider 2023.1.2)*
+- *(IDE: Visual Studio 2022)*
 - *(Framework: .NET 7.0)*
 - Language: C#, HTML, CSS, JS
 - Using Library:
