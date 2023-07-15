@@ -21,6 +21,7 @@
 - *(Framework: .NET 7.0)*
 - Language: C#, HTML, CSS, JS
 - Using Library:
+  [Newtonsoft 13.0.3](https://www.nuget.org/packages/Newtonsoft.Json/)
 
 </br>
 
