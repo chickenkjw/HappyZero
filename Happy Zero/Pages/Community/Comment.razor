@@ -1,14 +1,23 @@
 ﻿@using System.Text.Json;
+
 <h3>Comment</h3>
 
 
+@foreach(var post in postList) {
+	<div>@post.name</div>
+	<div>@post.text</div>
+}
 
 @code {
 	public class Post {
-		public int account { get; set; }
+		public string name { get; set; }
 		public int idx { get; set; }
 		public string text { get; set; }
+		public string ctime { get; set; }
+		public string etime { get; set; }
 	}
+
+	string ddd = string.Empty;
 
 	List<Post> postList = new List<Post>();
 
@@ -16,37 +25,53 @@
 	public int id { get; set; }
 
 	protected override async Task OnInitializedAsync() {
-		using(var httpClient = new HttpClient()) {
-			var response = await httpClient.GetAsync($"http://localhostinha.kro.kr:8080/api/test/comment/get?post_idx={id}");
+			using (var httpClient = new HttpClient())
+			{
+				var response = await httpClient.GetAsync($"http://localhostinha.kro.kr:8080/api/test/comment/get?post_idx={id.ToString()}");
 
-			if(response.IsSuccessStatusCode) {
+				if (response.IsSuccessStatusCode)
+				{
+					try
+					{
+						var contents = await response.Content.ReadAsStringAsync();
+						ddd = contents;
+						postList.Clear();
 
-				var contents = await response.Content.ReadAsStringAsync();
-				
-				postList.Clear();
+						JsonDocument jsonDocument = JsonDocument.Parse(contents);
 
-				JsonDocument jsonDocument = JsonDocument.Parse(contents);
+						JsonElement rootElement = jsonDocument.RootElement;
+						JsonElement dataElement = rootElement.GetProperty("data");
 
-				JsonElement rootElement = jsonDocument.RootElement;
-				JsonElement dataElement = rootElement.GetProperty("data");
+						foreach (JsonElement element in dataElement.EnumerateArray())
+						{
+							Post locationData = new Post
+								{
+									name = element.GetProperty("name").GetString()!,
+									idx = element.GetProperty("idx").GetInt32(),
+									text = element.GetProperty("text").GetString()!,
+									etime = element.GetProperty("edited_time").GetString()!,
+									ctime = element.GetProperty("created_time").GetString()!,
+								};
 
-				foreach(JsonElement element in dataElement.EnumerateArray()) {
-					Post locationData = new Post {
-							account = element.GetProperty("id").GetInt32(),
-							idx = element.GetProperty("user").GetInt32(),
-							text = element.GetProperty("title").GetString()!
-						};
+							postList.Add(locationData);
+						}
 
-					postList.Add(locationData);
+						jsonDocument.Dispose();
+
+						return;
+					}
+					catch
+					{
+						ddd = "dpfj";
+					}
 				}
-
-				jsonDocument.Dispose();
-
-				return;
+				else
+				{
+					ddd = "에러";
+				}
 			}
-		}
 
-		return;
+			return;
 	}
 
 }

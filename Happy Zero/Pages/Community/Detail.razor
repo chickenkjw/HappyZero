@@ -1,26 +1,31 @@
 ﻿@page "/community/detail/{id}"
 @using Newtonsoft.Json
+@using System.Text.Json;
 
 <PageTitle>세부 글</PageTitle>
 
 <h3>Detail</h3>
 
-<div>@doc.title</div>
-<div>@doc.description</div>
+<div class="fs-4 mt-5">제목: @doc.title</div>
+<div class="mt-2">@doc.description</div>
 
-<Comment></Comment>
+<br/>
+<Comment id="@doc.id"></Comment>
 
 @code {
 	private class Doc {
 		public int id { get; set; }
+		public string user { get; set; }
 		public string title { get; set; }
 		public string description { get; set; }
-		public DateTime createTime { get; set; }
-		public DateTime editTime { get; set; }
+		public string createTime { get; set; }
+		public string editTime { get; set; }
 	}
 
 	[Parameter]
 	public string id { get; set; }
+
+	string ddd = string.Empty;
 
 	Doc doc = new();
 
@@ -28,15 +33,26 @@
 		using(var httpClient = new HttpClient()) {
 			try
 			{
-				var response = await httpClient.GetAsync($"http://localhostinha.kro.kr:8080/api/api/post/get?id={id}");
+				var response = await httpClient.GetAsync($"http://localhostinha.kro.kr:8080/api/post/get?id={id}");
 
 				if (response.IsSuccessStatusCode)
 				{
-
 					var contents = await response.Content.ReadAsStringAsync();
-					doc = JsonConvert.DeserializeObject<Doc>(contents)!;
 
-					return;
+					JsonDocument jsonDocument = JsonDocument.Parse(contents);
+
+					JsonElement rootElement = jsonDocument.RootElement;
+					JsonElement dataElement = rootElement.GetProperty("data");
+
+					foreach (JsonElement element in dataElement.EnumerateArray())
+					{
+						doc.id = element.GetProperty("id").GetInt32();
+						doc.title = element.GetProperty("title").GetString()!;
+						doc.description = element.GetProperty("description").GetString()!;
+						doc.user = element.GetProperty("user").GetString()!;
+						doc.createTime = element.GetProperty("created_time").GetString()!;
+						doc.editTime = element.GetProperty("edited_time").GetString()!;
+					}
 				}
 			}
 			catch {

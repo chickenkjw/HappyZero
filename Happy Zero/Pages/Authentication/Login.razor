@@ -6,6 +6,7 @@
 @using Newtonsoft.Json;
 @using System.Text;
 @inject NavigationManager NavigationManager
+@inject DataProvider dataProviedr
 @inject AuthenticationStateProvider AuthStateProvider
 
 <PageTitle>로그인</PageTitle>
@@ -65,6 +66,7 @@
             if(response.IsSuccessStatusCode && ok.Equals("true") && token is not null) {
                 var auth = (AuthStateProvider)AuthStateProvider;
                 await auth.UpdateAuthenticaitonState(token);
+                await dataProviedr.SetUserData(token!);
                 NavigationManager.NavigateTo("/");
                 return;
             }
