@@ -1,6 +1,9 @@
 ﻿@page "/map"
-@using System.Text.Json.Nodes;
+@using System.Text.Json.Nodes
+@using System.Text.Json
+@using Newtonsoft.Json;
 @inject IJSRuntime JSRuntime
+@inject HttpClient HttpClient
 
 <PageTitle>제로 웨이스트 지도</PageTitle>
 
@@ -10,20 +13,91 @@
         <button @onclick="GetLocation" class="btn btn-primary mt-3 mb-4">위치 재검색</button>
     </div>
 
-    
+    <div id="shopList" class="ms-5 mt-5">
+        @if(latlng.Count > 0) {
+            @foreach(var data in locationList) {
+                <div class="fs-4 my-2">@data.Name</div>
+                <div style="height: 1px; width: 60%; background-color: black"></div>
+            }
+        }
+        else {
+            <p>지금은 주변에 제로 웨이스트 상점이 없습니다!</p>
+        }
+    </div>
+
+    <div>@json</div>
 </div>
 
 
 @code {
+    public class LocationData {
+        public string Name { get; set; }
+        public double CoordX { get; set; }
+        public double CoordY { get; set; }
+    }
+
+    public class Location
+    {
+        public double Latitude { get; set; } // 위도
+        public double Longitude { get; set; } // 경도
+    }
+
     JsonArray? locArray;
+    JsonArray pos;
     List<double> latlng = new List<double>();
+
+    double lat = 37.622943726;
+    double lng = 127.080319265;
+
+    string json = string.Empty;
+
+    List<LocationData> locationList = new List<LocationData>();
 
     private async Task GetLocation() {
         locArray = await JSRuntime.InvokeAsync<JsonArray>("getCoords");
+        latlng.Clear();
         foreach(var element in locArray) {
             latlng.Add(element!.GetValue<double>());
         }
 
-        await JSRuntime.InvokeVoidAsync("setMapMaker");
+        using(HttpClient httpClient = new HttpClient()) {
+            var response = await httpClient.GetAsync($"http://localhostinha.kro.kr:8080/api/test/geomap/get?coord_x={lng}&coord_y={lat}");
+            //var response = await httpClient.GetAsync($"http://localhostinha.kro.kr:8080/api/test/geomap/get?coord_x={latlng[0]}&coord_y={latlng[1]}");
+            var responseContent = await response.Content.ReadAsStringAsync();
+
+            JsonDocument jsonDocument = JsonDocument.Parse(responseContent);
+
+            JsonElement rootElement = jsonDocument.RootElement;
+            JsonElement dataElement = rootElement.GetProperty("data");
+
+            locationList.Clear();
+
+            foreach(JsonElement element in dataElement.EnumerateArray()) {
+                LocationData locationData = new LocationData {
+                    Name = element.GetProperty("name").GetString()!,
+                    CoordX = element.GetProperty("coord_x").GetDouble(),
+                    CoordY = element.GetProperty("coord_y").GetDouble()
+                };
+
+                locationList.Add(locationData);
+            }
+
+            jsonDocument.Dispose();
+        }
+
+        var options = new JsonSerializerOptions {
+                WriteIndented = true,
+                Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+            };
+
+        var resultList = locationList.Select(location => new {
+            title = location.Name,
+            lat = Math.Round(location.CoordY, 5), 
+            lng = Math.Round(location.CoordX, 5)
+        }).ToList();
+
+        var positions = JsonConvert.SerializeObject(resultList);
+
+        await JSRuntime.InvokeVoidAsync("setMapMaker", lat, lng, positions);
     }
 }
