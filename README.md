@@ -4,8 +4,9 @@
 1. [Tech Stack](#1-tech-stack)
 2. [Environment](#2-environment)
 3. [API](#3-api)
-4. [Frontend](#4-backend)
-5. [Collaborators](#5-collaborators)
+4. [ERD](#4-erd)
+5. [Backend](#5-backend)
+6. [Collaborators](#6-collaborators)
 
 </br>
 
@@ -32,19 +33,26 @@
 | | signIn | POST | /api/account/signin | | AccountSignInRequestDto | ResponseEntity.ok |
 | | getInfo | POST | /api/account/getinfo | | AccountGetInfoRequestDto | Json |
 | Post | save | POST | /api/post/save | | PostSaveRequestDto | ResponseEntity.ok |
+| | remove | POST | /api/post/remove | | PostRemoveRequestDto | ResponseEntity.ok |
 | | getPost | GET | /api/post/get | ?id={id} | | Json |
 | | getPosts | GET | /api/post/search | ?page={page}&size={size} | | Json |
+| Comment | save | POST | /api/comment/save | | CommentRequestDto | ResponseEntity.ok |
+| | get | POST | /api/post/get | | CommentRequestDto | Json |
 | GeoMap | save | POST | /api/geomap/save | | GeoMapRequestDto | String |
 | | get | POST | /api/geomap/get | | GeoMapGetRequestDto | Json |
 | | getDistance | GET | /api/geomap/getdistance | ?x1={x1}&y1={y1}&x2={x2}&y2={y2} | | Double |
+| MapJsonParser | save | GET | /api/parser | | | String |
 | for Debug | | | | | | |
 | Account | testValidate | GET | /api/test/account/validate | ?id={id} | | ResponseEntity.ok |
 | | testSignUp | GET | /api/test/account/signup | ?id={id}&name={name}&pw={pw}&email={email} | | ResponseEntity.ok |
 | | testSignIn | GET | /api/test/account/signin | ?id={id}&pw={pw} | | ResponseEntity.ok |
 | | testGetInfo | GET | /api/test/account/getinfo | ?id={id} | | Json |
-| Post | save | POST | /api/test/post/save | ?id={id}&title={title}&description={description} | | Json |
+| Post | save | GET | /api/test/post/save | ?id={id}&title={title}&description={description} | | Json |
+| | remove | GET | /api/test/post/remove | ?post_idx={post_idx} | | ResponseEntity.ok |
+| Comment | save | GET | /api/test/comment/save | ?account_idx={account_idx}&post_idx={post_idx}&text={text} | | Json |
+| | get | GET | /api/test/comment/get | ?post_idx={post_idx} | | Json |
 | GeoMap | testSave | GET | /api/test/geomap/save | ?name={name}&coord_x={coord_x}&coord_y={coord_y} | | String |
-| | testGet | POST | /api/test/geomap/get | ?coord_x={coord_x}&coord_y={coord_y} | | Json |
+| | testGet | GET | /api/test/geomap/get | ?coord_x={coord_x}&coord_y={coord_y} | | Json |
 
 | Dto | Data | Type |
 | --- | --- | --- |
@@ -60,6 +68,12 @@
 | PostSaveRequestDto | id | String |
 | | title | String |
 | | description | String |
+| PostRemoveRequestDto | post_idx | int |
+| CommentRequestDto | account_idx | int |
+| | post_idx | int |
+| | text | String |
+| PostRemoveRequestDto | post_idx | int |
+| PostRemoveRequestDto | post_idx | int |
 | GeoMapRequestDto | name | String |
 | | coord_x | String |
 | | coord_y | String |
@@ -73,12 +87,17 @@
 
 </br>
 
-## 4. Backend
+## 4. ERD
+![ERD](https://github.com/chickenkjw/HappyZero/assets/63220297/adfb1651-806c-4e9d-bc00-52ff8d0bd10b)
+
+</br>
+
+## 5. Backend
 - https://github.com/Baebin/LocalhostInha_backend
 
 </br>
 
-## 5. Collaborators
+## 6. Collaborators
 | ID | Develop Part |
 | --- | :---: |
 | [Aspyn04](https://github.com/Aspyn04) | UI |
