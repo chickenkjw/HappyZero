@@ -1,5 +1,50 @@
-﻿<h3>Write</h3>
+﻿@page "/community/write"
+@using System.ComponentModel.DataAnnotations
+@using Inhu.Authentication;
+@inject NavigationManager NavigationManager
+@inject DataProvider dataState
+
+<PageTitle>글 작성</PageTitle>
+
+<div class="container">
+	<div class="form-group mt-5">
+		<label class="form-label">글 제목</label>
+		<input type="text" class="form-control" placeholder="글 제목을 작성하세요"/>
+	</div>
+	<div class="form-group mt-5">
+		<label class="form-label">글 내용</label>
+		<InputTextArea class="form-control" placeholder="어떤 글을 작성할까요?" />
+	</div>
+
+	<div>@error</div>
+
+	<button @onclick="Save">저장</button>
+</div>
 
 @code {
+	[Required]
+	public string title { get; set; }
+	[Required]
+	public string contents { get; set; }
 
+	string error = string.Empty;
+
+	private async Task Save() {
+		var data = dataState.GetUserSession();
+
+		using(var httpClient = new HttpClient()) {
+			var id = data.Result.Uid;
+			var response = await httpClient.GetAsync($"http://localhostinha.kro.kr:8080/api/test/post/save?id={id}&title={title}&description={contents}");
+
+			if(response.IsSuccessStatusCode) {
+				NavigationManager.NavigateTo("/community");
+				return;
+			}
+			else {
+				error = "저장에 실패했습니다. 잠시 후 다시 시도해 주세요";
+			}
+		}
+
+		return;
+	}
 }

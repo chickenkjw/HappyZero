@@ -1,5 +1,53 @@
-﻿<h3>Detail</h3>
+﻿@page "/community/detail/{id}"
+@using Newtonsoft.Json
+
+<PageTitle>세부 글</PageTitle>
+
+<h3>Detail</h3>
+
+<div>@doc.title</div>
+<div>@doc.description</div>
+
+<Comment></Comment>
 
 @code {
+	private class Doc {
+		public int id { get; set; }
+		public string title { get; set; }
+		public string description { get; set; }
+		public DateTime createTime { get; set; }
+		public DateTime editTime { get; set; }
+	}
 
+	[Parameter]
+	public string id { get; set; }
+
+	Doc doc = new();
+
+	protected override async Task OnInitializedAsync() {
+		using(var httpClient = new HttpClient()) {
+			try
+			{
+				var response = await httpClient.GetAsync($"http://localhostinha.kro.kr:8080/api/api/post/get?id={id}");
+
+				if (response.IsSuccessStatusCode)
+				{
+
+					var contents = await response.Content.ReadAsStringAsync();
+					doc = JsonConvert.DeserializeObject<Doc>(contents)!;
+
+					return;
+				}
+			}
+			catch {
+				doc = new Doc
+					{
+						title = "없어요",
+						description = "글이 존재하지 않아요"
+					};
+			}
+		}
+
+		return;
+	}
 }

@@ -1,5 +1,82 @@
-﻿<h3>Index</h3>
+﻿@page "/community"
+@page "/community?p={page: int}&s={size: int}"
+@using Newtonsoft.Json;
+@using System.Text.Json;
+@inject NavigationManager nav
+
+<PageTitle>커뮤니티</PageTitle>
+
+<h3>목록</h3>
+
+@if(docList.Count > 0) {
+	@foreach(var doc in docList) {
+		<div class="d-flex my-3" @onclick="(() => GoToDetail(doc.id))">
+			@doc.id @doc.user @doc.title
+		</div>
+		<div style="height: 1px; width: 60%; background-color: black"></div>
+	}
+}
+
+<div>
+	@for(int i = 1; i <= 10; i++) {
+		<button class="btn btn-secondary" @onclick="(() => GoToPage(i))">@i</button>
+	}
+</div>
 
 @code {
+	[Parameter]
+	public int page { get; set; }
+	[Parameter]
+	public int size { get; set; }
 
+	public class Doc {
+		public int id { get; set; }
+		public string user { get; set; }
+		public string title { get; set; }
+	}
+
+	List<Doc> docList = new List<Doc>();
+
+	protected override async Task OnInitializedAsync() {
+		if (page == null || page < 1) {
+			page = 1;
+		}
+
+		using(var httpClient = new HttpClient()) {
+			var response = await httpClient.GetAsync($"http://localhostinha.kro.kr:8080/api/post/search?page={page}&size={size}");
+
+			if(response.IsSuccessStatusCode) {
+				var contents = await response.Content.ReadAsStringAsync();
+
+				docList.Clear();
+
+				JsonDocument jsonDocument = JsonDocument.Parse(contents);
+
+				JsonElement rootElement = jsonDocument.RootElement;
+				JsonElement dataElement = rootElement.GetProperty("data");
+
+				foreach(JsonElement element in dataElement.EnumerateArray()) {
+					Doc locationData = new Doc {
+							id = element.GetProperty("id").GetInt32(),
+							user = element.GetProperty("user").GetString()!,
+							title = element.GetProperty("title").GetString()!
+						};
+
+					docList.Add(locationData);
+				}
+
+				jsonDocument.Dispose();
+
+				return;
+			}
+		}
+	}
+
+	private void GoToDetail(int id) {
+		nav.NavigateTo($"/community/detail/{id}");
+	}
+
+	private void GoToPage(int p, int s = 10) {
+		nav.NavigateTo($"/community?p={p}&s={s}");
+	}
 }
